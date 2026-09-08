@@ -36,9 +36,8 @@ const App = () => {
   }
   const largest = Math.max(...votes)
 
-  const anecdote = () => {
-    
-  }
+  const mostVoted = votes.indexOf(largest)
+
 
 
 
@@ -55,7 +54,7 @@ const App = () => {
        text = "New" 
        />
        <h1>Anecdote with most votes</h1>
-       <p> </p>
+       <p> {anecdotes[mostVoted]}</p>
        <p>has {largest} votes</p>
 
     </div>
