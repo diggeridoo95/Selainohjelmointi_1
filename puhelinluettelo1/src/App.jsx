@@ -1,37 +1,75 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
-  const addName = (event) => {
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled', response.data)
+        setPersons(response.data)
+      })
+    }, [])
+    console.log('render', persons.length, 'persons')
+
+  const addPerson = (event) => {
     event.preventDefault()
-    const nameObject = {
+    const newPerson = {
       name: newName,
-      id: persons.length + 1,
+      number: newNumber
     }
 
-    setPersons(persons.concat(nameObject))
-    setNewName('')
-  }
 
-  const handleNameChange = (event) => {
-    console.log(event.target.value)
-    if (event.target.value in persons.map(person => person.name)) {
-      console.log('Name already exists')
-    }else {
-      setNewName(event.target.value)
+    const personExists = persons.some(p => p.name === newName)
+
+    if (personExists) {
+      alert(`${newName} is already in the phonebook`)
+      return
     }
-  }
+
+    axios
+    .post('http://localhost:3001/persons', newPerson)
+    .then(response => {
+      console.log(response)
+      setPersons(persons.concat(newPerson))
+      setNewName('')
+      setNewNumber('')
+
+    })}
+
+    const deletePerson = (name) => {
+      const personToDelete = persons.find(p => p.name === name)
+      if (personToDelete) {
+        axios
+          .delete(`http://localhost:3001/persons/${personToDelete.id}`)
+          .then(() => {
+            setPersons(persons.filter(p => p.id !== personToDelete.id))
+          })
+          .catch(error => {
+            console.error('Error deleting person:', error)
+          })
+      }
+    }
+  
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addName}>
+      <form onSubmit={addPerson}>
         <div>
-          name: <input value={newName} onChange={handleNameChange} />
+          name: <input 
+            value={newName}
+            onChange={event => setNewName(event.target.value)}
+          />
+          number: <input 
+            value={newNumber}
+            onChange={event => setNewNumber(event.target.value)}
+          />          
         </div>
         <div>
           <button type="submit">add</button>
@@ -39,13 +77,10 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map(person => 
-          <li key={person.id}>{person.name}</li>
-        )}
+        {persons.map(p => <li key={p.name}>{p.name} {p.number}</li>)} <button id="deleteButton" onClick={() => deletePerson(p.name)}>delete</button>
       </ul>
     </div>
   )
-
 }
 
 export default App
