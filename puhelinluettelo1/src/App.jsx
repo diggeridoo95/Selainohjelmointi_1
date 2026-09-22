@@ -36,14 +36,19 @@ const App = () => {
     .post('http://localhost:3001/persons', newPerson)
     .then(response => {
       console.log(response)
-      setPersons(persons.concat(newPerson))
+      setPersons(persons.concat(response.data))
       setNewName('')
       setNewNumber('')
 
     })}
 
-    const deletePerson = (name) => {
-      const personToDelete = persons.find(p => p.name === name)
+    const deletePerson = (id) => {
+
+      if (!window.confirm('Are you sure you want to delete this person?')) {
+        return
+      }
+
+      const personToDelete = persons.find(p => p.id === id)
       if (personToDelete) {
         axios
           .delete(`http://localhost:3001/persons/${personToDelete.id}`)
@@ -55,6 +60,7 @@ const App = () => {
           })
       }
     }
+  
   
 
   return (
@@ -77,7 +83,13 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map(p => <li key={p.name}>{p.name} {p.number}</li>)} <button id="deleteButton" onClick={() => deletePerson(p.name)}>delete</button>
+        {persons.map(p => 
+        <li key={p.id}>
+          {p.name} {p.number}
+          <button id="deleteButton" onClick={() => deletePerson(p.id)}>delete</button>
+
+        </li>)} 
+        
       </ul>
     </div>
   )
