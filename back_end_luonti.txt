@@ -1,0 +1,17 @@
+Mennään sopivaan hakemistoon ja luodaan projektimme runko komennolla npm init. 
+Vastaillaan kysymyksiin sopivasti, 
+ja tuloksena on hakemiston juureen sijoitettu projektin tietoja kuvaava tiedosto package.json:
+
+Tehdään kenttään scripts pieni lisäys:
+"start": "node index.js",
+
+node index.js tai npm start aloittaa ohjelman
+
+ota express käyttöön: npm install express
+npm install
+
+palvelin seuraa muutoksia: node --watch index.js
+
+package.jsoniin: scripteihin: "dev": "node --watch index.js",
+
+toimiin nyt: npm run dev
