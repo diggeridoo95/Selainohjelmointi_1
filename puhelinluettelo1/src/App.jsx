@@ -33,7 +33,7 @@ const App = () => {
     }
 
     axios
-    .post('http://localhost:3001/persons', newPerson)
+    .post('http://localhost:3001/api/persons', newPerson)
     .then(response => {
       console.log(response)
       setPersons(persons.concat(response.data))
@@ -51,7 +51,7 @@ const App = () => {
       const personToDelete = persons.find(p => p.id === id)
       if (personToDelete) {
         axios
-          .delete(`http://localhost:3001/persons/${personToDelete.id}`)
+          .delete(`http://localhost:3001/api/persons/${personToDelete.id}`)
           .then(() => {
             setPersons(persons.filter(p => p.id !== personToDelete.id))
           })
