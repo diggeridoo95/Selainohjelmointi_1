@@ -15,3 +15,5 @@ palvelin seuraa muutoksia: node --watch index.js
 package.jsoniin: scripteihin: "dev": "node --watch index.js",
 
 toimiin nyt: npm run dev
+
+executionolicy: Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
