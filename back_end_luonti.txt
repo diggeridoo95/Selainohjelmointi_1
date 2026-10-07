@@ -1,6 +1,12 @@
-Mennään sopivaan hakemistoon ja luodaan projektimme runko komennolla npm init. 
-Vastaillaan kysymyksiin sopivasti, 
-ja tuloksena on hakemiston juureen sijoitettu projektin tietoja kuvaava tiedosto package.json:
+Luo backendille oma kansio ja siirry siihen:
+
+mkdir kirjaluettelobackend
+cd kirjaluettelobackend
+
+Luodaan projektin runko komennolla npm init. Vastaillaan kysymyksiin sopivasti,
+ja tuloksena on hakemiston juureen sijoitettu projektin tietoja kuvaava package.json:
+
+npm init -y
 
 Tehdään kenttään scripts pieni lisäys:
 "start": "node index.js",
@@ -8,12 +14,72 @@ Tehdään kenttään scripts pieni lisäys:
 node index.js tai npm start aloittaa ohjelman
 
 ota express käyttöön: npm install express
-npm install
+npm install cors
 
-palvelin seuraa muutoksia: node --watch index.js
+Luo projektin juureen tiedosto index.js. Palvelimen alussa tarvitaan:
+
+const express = require('express')
+const cors = require('cors')
+
+const app = express()s
+app.use(express.json())
+app.use(cors())
+
+Kirjaluettelon data voi olla aluksi suoraan index.js-tiedostossa. Kirjan muoto on:
+
+{
+	title: 'Kirjan nimi',
+	author: 'Kirjan tekijä',
+	year: 'Vuosi',
+	id: 'Yksilöllinen tunniste'
+}
+
+Lisää kirjaluettelolle nämä API-reitit:
+
+GET    /api/books       palauttaa kaikki kirjat
+GET    /api/books/:id   palauttaa yhden kirjan
+POST   /api/books       lisää uuden kirjan
+DELETE /api/books/:id   poistaa kirjan
+
+POST-pyynnössä tarkistetaan, että title, author ja year löytyvät pyynnön rungosta.
+Uudelle kirjalle luodaan id, ja onnistunut pyyntö palauttaa lisätyn kirjan JSON-muodossa.
+DELETE onnistuu palauttamalla statuskoodin 204.
+
+Express käsittelee palvelimen pyynnöt ja cors sallii kirjaluettelon frontin
+yhteyden palvelimeen eri portista.
 
 package.jsoniin: scripteihin: "dev": "node --watch index.js",
 
-toimiin nyt: npm run dev
+Palvelin kuuntelee samaa porttia, jota kirjaluettelon front käyttää:
 
-executionolicy: Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+const PORT = 3001
+app.listen(PORT, () => {
+	console.log(`Server running on port ${PORT}`)
+})
+
+Ensimmäisen kerran riippuvuuksien asennuksen jälkeen palvelin käynnistetään backend-kansiosta:
+
+cd C:\Koulu\Selainohjelmointi_1\kirjaluettelobackend
+npm install
+npm start
+
+Kehitystilassa tiedosto voidaan käynnistää automaattisesti uudelleen:
+
+npm run dev
+
+Tarkista toisessa PowerShell-ikkunassa, että API palauttaa kirjoja:
+
+Invoke-RestMethod -Uri "http://localhost:3001/api/books"
+
+Frontend käynnistetään omassa PowerShell-ikkunassaan kirjaluettelo-kansiosta:
+
+cd C:\Koulu\Selainohjelmointi_1\kirjaluettelo
+npm run dev
+
+Jos PowerShell estää skriptien suorittamisen, suorita kerran:
+
+executionpolicy: Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+
+Huomio: nykyinen backend säilyttää kirjat vain muistissa. Kaikki lisätyt tai poistetut
+kirjat palautuvat esimerkkidataan, kun palvelin käynnistetään uudelleen. Tietokannan
+käyttö voidaan lisätä myöhemmin.

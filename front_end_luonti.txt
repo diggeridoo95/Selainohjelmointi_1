@@ -1,0 +1,54 @@
+LATAA MARKDOWNPREVIEW ENHANCED
+Frontendin voi aloittaa Full Stack Openin ohjeiden tapaan Vite-projektina.
+
+Siirry kansioon, johon haluat projektin luoda, ja suorita:
+
+npm create vite@latest
+
+Valitse kysymyksissä:
+
+Project name: kirjaluettelo
+Framework: React
+Variant: JavaScript
+
+Siirry projektikansioon ja asenna riippuvuudet:
+
+cd kirjaluettelo
+npm install
+npm install axios
+
+Käynnistä frontend kehitystilassa:
+
+npm run dev
+
+Frontend löytyy yleensä osoitteesta:
+
+http://localhost:5173
+
+Kirjaluettelon React-sovellus käyttää Axiosia backendin kanssa kommunikointiin:
+
+GET    http://localhost:3001/api/books       hakee kirjat
+POST   http://localhost:3001/api/books       lisää kirjan
+DELETE http://localhost:3001/api/books/:id   poistaa kirjan
+
+Frontendin App.jsx-tiedostossa voidaan käyttää esimerkiksi:
+
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+
+Backend käynnistetään omassa PowerShell-ikkunassaan:
+
+cd C:\Koulu\Selainohjelmointi_1\kirjaluettelobackend
+npm start
+
+Frontend käynnistetään toisessa PowerShell-ikkunassa:
+
+cd C:\Koulu\Selainohjelmointi_1\kirjaluettelo
+npm run dev
+
+Varmista, että backend on käynnissä ennen kuin frontend yrittää hakea kirjoja.
+Backend käyttää porttia 3001 ja Vite-frontend yleensä porttia 5173.
+
+Tuotantobuildin voi tarkistaa komennolla:
+
+npm run build
